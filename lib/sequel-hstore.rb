@@ -5,7 +5,7 @@ require_relative 'hstore/hstore'
 
 class Hash
   def to_hstore
-    Sequel::Postgres::HStore[self.dup]
+    Sequel::Postgres::HStore[self]
   end
 
   def self.===(other)

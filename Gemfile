@@ -1,5 +1,5 @@
 source :rubygems
 
-gem "pg"
-gem "sequel"
-gem "rspec"
+group :test do
+  gem "rspec"
+end

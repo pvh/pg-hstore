@@ -1,31 +1,9 @@
 require 'strscan'
 
-class Sequel::Postgres::HStore < Hash
-  def self.quoted_string(scanner)
-    key = scanner.scan(/(\\"|[^"])*/)
-    key = key.gsub(/\\(.)/, '\1')
-    scanner.skip(/"/)
-    key
-  end
-  def self.parse_quotable_string(scanner)
-    if scanner.scan(/"/)
-      value = quoted_string(scanner)
-    else
-      value = scanner.scan(/\w+/)
-      value = nil if value == "NULL"
-      # TODO: values but not keys may be NULL
-    end
-  end
-
-  def self.skip_key_value_delimiter(scanner)
-    scanner.skip(/\s*=>\s*/) 
-  end
-
-  def self.skip_pair_delimiter(scanner)
-    scanner.skip(/,\s*/)
-  end
-
-  def self.new_from_string(string)
+module HStore
+  extend self
+  
+  def parse(string)
     hash = {}
 
     # remove single quotes around literal if necessary
@@ -41,19 +19,12 @@ class Sequel::Postgres::HStore < Hash
       # to_sym, or what?
       hash[k.to_sym] = v
     end
-    self[hash]
+    
+    hash
   end
 
-  def initialize(hash)
-    @hash = hash
-  end
-
-  def to_s_escaped(str)
-    str.to_s.gsub(/\\(?!")/) {'\\\\'}.gsub(/"/, '\"').gsub(/'/, "''")
-  end
-
-  def sql_literal(dataset)
-    string = self.map do |(k,v)|
+  def dump(hash)
+    string = hash.map do |(k,v)|
       if v.nil?
         # represent nil as NULL without quotes
         v = "NULL"
@@ -68,5 +39,38 @@ class Sequel::Postgres::HStore < Hash
     end.join(", ")
     "'#{string}'"
   end
+
+  private
+  
+  def quoted_string(scanner)
+    key = scanner.scan(/(\\"|[^"])*/)
+    key = key.gsub(/\\(.)/, '\1')
+    scanner.skip(/"/)
+    key
+  end
+  
+  def parse_quotable_string(scanner)
+    if scanner.scan(/"/)
+      value = quoted_string(scanner)
+    else
+      value = scanner.scan(/\w+/)
+      value = nil if value == "NULL"
+      # TODO: values but not keys may be NULL
+    end
+  end
+
+  def skip_key_value_delimiter(scanner)
+    scanner.skip(/\s*=>\s*/) 
+  end
+
+  def skip_pair_delimiter(scanner)
+    scanner.skip(/,\s*/)
+  end
+
+
+  def to_s_escaped(str)
+    str.to_s.gsub(/\\(?!")/) {'\\\\'}.gsub(/"/, '\"').gsub(/'/, "''")
+  end
+
 end
 
