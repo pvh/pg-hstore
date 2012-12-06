@@ -12,12 +12,10 @@ $spec = Gem::Specification.new do |s|
   s.authors = ["Peter van Hardenberg"]
   s.email = ["pvh@heroku.com"]
 
-  # = MANIFEST =
-#  s.files = %w[LICENSE README.md] + Dir["lib/**/*.rb"]
+  s.files = Dir["lib/**/*.rb"]
 
   s.executables = []
 
-  # = MANIFEST =
   s.add_development_dependency 'rspec', '~> 2.5.0'
   s.homepage = "http://github.com/pvh/pg-hstore"
   s.require_paths = %w[lib]
