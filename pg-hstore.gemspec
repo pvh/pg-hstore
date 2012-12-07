@@ -3,14 +3,14 @@ $spec = Gem::Specification.new do |s|
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
 
   s.name = 'pg-hstore'
-  s.version = '1.0'
+  s.version = '1.0.1'
   s.date = '2011-11-10'
 
-  s.description = "postgresql hstore parser/deparser"
+  s.description = "postgresql hstore parser/deparser - provides PgHstore.dump and PgHstore.parse"
   s.summary     = ""
 
-  s.authors = ["Peter van Hardenberg"]
-  s.email = ["pvh@heroku.com"]
+  s.authors = ["Peter van Hardenberg", "Seamus Abshere"]
+  s.email = ["pvh@heroku.com", "seamus@abshere.net"]
 
   s.files = Dir["lib/**/*.rb"]
 

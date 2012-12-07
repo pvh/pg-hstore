@@ -1,6 +1,6 @@
 require 'strscan'
 
-module HStore
+module PgHstore
   extend self
   
   def parse(string)

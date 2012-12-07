@@ -1,8 +1,8 @@
-require './lib/hstore'
+require './lib/pg_hstore'
 
 describe "hstores from hashes" do
   before do
-    @h = HStore::dump :a => "b", :foo => "bar"
+    @h = PgHstore::dump :a => "b", :foo => "bar"
   end
 
   it "should translate into a sequel literal" do
@@ -12,7 +12,7 @@ end
 
 describe "creating hstores from strings" do
   before do
-    @h = HStore::parse (
+    @h = PgHstore::parse (
       "\"ip\"=>\"17.34.44.22\", \"service_available?\"=>\"false\"")
   end
 
@@ -21,27 +21,27 @@ describe "creating hstores from strings" do
   end
 
   it "should store an empty string" do
-    hstore = HStore::dump :nothing => ""
+    hstore = PgHstore::dump :nothing => ""
     hstore.should == '\'"nothing" => ""\''
   end
 
   it "should support single quotes in strings" do
-    hstore = HStore::dump :journey => "don't stop believin'"
+    hstore = PgHstore::dump :journey => "don't stop believin'"
     hstore.should == %q{'"journey" => "don''t stop believin''"'}
   end
 
   it "should support double quotes in strings" do
-    hstore = HStore::dump :journey => 'He said he was "ready"'
+    hstore = PgHstore::dump :journey => 'He said he was "ready"'
     hstore.should == %q{'"journey" => "He said he was \"ready\""'}
   end
 
   it "should escape \ garbage in strings" do
-    hstore = HStore::dump :line_noise => %q[perl -p -e 's/\$\{([^}]+)\}/] #'
+    hstore = PgHstore::dump :line_noise => %q[perl -p -e 's/\$\{([^}]+)\}/] #'
     hstore.should == %q['"line_noise" => "perl -p -e ''s/\\\\$\\\\{([^}]+)\\\\}/"']
   end
 
   it "should parse an empty string" do
-    hstore = HStore.parse(
+    hstore = PgHstore.parse(
       "\"ip\"=>\"\", \"service_available?\"=>\"false\"")
 
     hstore[:ip].should == ""
@@ -50,27 +50,27 @@ describe "creating hstores from strings" do
 
   it "should be able to parse its own output" do
     data = { :journey => 'He said he was ready' }
-    hstore = HStore::dump data
-    parsed = HStore::parse(hstore)
+    hstore = PgHstore::dump data
+    parsed = PgHstore::parse(hstore)
     parsed.should == data
   end
 
   it "should be able to parse hstore strings without ''" do
     data = { :journey => 'He said he was ready' }
-    literal = HStore::dump data
-    parsed = HStore.parse(literal[1..-2])
+    literal = PgHstore::dump data
+    parsed = PgHstore.parse(literal[1..-2])
     parsed.should == data
   end
 
   it "should be stable over iteration" do
-    dump = HStore::dump :journey => 'He said he was "ready"'
-    parse = HStore::parse dump
+    dump = PgHstore::dump :journey => 'He said he was "ready"'
+    parse = PgHstore::parse dump
 
     original = dump
 
     10.times do
-      parsed = HStore::parse(dump)
-      dump = HStore::dump(parsed)
+      parsed = PgHstore::parse(dump)
+      dump = PgHstore::dump(parsed)
       dump.should == original
     end
   end
