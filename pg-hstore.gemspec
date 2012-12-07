@@ -17,6 +17,6 @@ $spec = Gem::Specification.new do |s|
   s.executables = []
 
   s.add_development_dependency 'rspec', '~> 2.5.0'
-  s.homepage = "http://github.com/pvh/pg-hstore"
+  s.homepage = "https://github.com/seamusabshere/pg-hstore"
   s.require_paths = %w[lib]
 end
