@@ -6,14 +6,14 @@ describe "hstores from hashes" do
   end
 
   it "should translate into a sequel literal" do
-    @h.should == '\'"a" => "b", "foo" => "bar"\''
+    @h.should == %{'"a" => "b", "foo" => "bar"'}
   end
 end
 
 describe "creating hstores from strings" do
   before do
     @h = PgHstore::parse (
-      "\"ip\"=>\"17.34.44.22\", \"service_available?\"=>\"false\"")
+      %{"ip"=>"17.34.44.22", "service_available?"=>"false"})
   end
 
   it "should set a value correctly" do
@@ -22,7 +22,7 @@ describe "creating hstores from strings" do
 
   it "should store an empty string" do
     hstore = PgHstore::dump :nothing => ""
-    hstore.should == '\'"nothing" => ""\''
+    hstore.should == %{'"nothing" => ""'}
   end
 
   it "should support single quotes in strings" do
@@ -42,7 +42,7 @@ describe "creating hstores from strings" do
 
   it "should parse an empty string" do
     hstore = PgHstore.parse(
-      "\"ip\"=>\"\", \"service_available?\"=>\"false\"")
+      %{"ip"=>"", "service_available?"=>"false"})
 
     hstore[:ip].should == ""
     hstore[:ip].should_not == nil
