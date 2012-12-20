@@ -50,9 +50,9 @@ module PgHstore
       [k, v].join ' => '
     end.join(", ")
     if for_parameter
-      SINGLE_QUOTE + string + SINGLE_QUOTE
-    else
       string
+    else
+      SINGLE_QUOTE + string + SINGLE_QUOTE
     end
   end
 
