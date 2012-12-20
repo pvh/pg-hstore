@@ -1,3 +1,9 @@
+1.1.1 / 2012-12-06
+
+* Enhancements
+
+  * PgHstore.dump(x, true) if you're going to use the output in a bind variable
+
 1.1.0 / 2012-12-06
 
 * Breaking changes

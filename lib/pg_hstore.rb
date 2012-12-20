@@ -1,13 +1,16 @@
 require 'strscan'
 
 module PgHstore
+  SINGLE_QUOTE = "'"
+  DOUBLE_QUOTE = '"'
+
   extend self
   
   def parse(string)
     hash = {}
 
     # remove single quotes around literal if necessary
-    string = string[1..-2] if string[0] == "'" and string[-1] == "'"
+    string = string[1..-2] if string[0] == SINGLE_QUOTE and string[-1] == SINGLE_QUOTE
 
     scanner = StringScanner.new(string)
     while !scanner.eos?
@@ -23,21 +26,34 @@ module PgHstore
     hash
   end
 
-  def dump(hash)
-    string = hash.map do |(k,v)|
+  # set for_parameter = true if you're using the output for a bind variable
+  def dump(hash, for_parameter = false)
+    string = hash.map do |k, v|
       if v.nil?
         # represent nil as NULL without quotes
         v = "NULL"
       else
+        v = v.to_s
+        unless for_parameter
+          v = to_s_escaped v
+        end
         # otherwise, write a double-quoted string with backslash escapes for quotes
-        v = to_s_escaped(v)
-        v = "\"#{v}\""
+        v = DOUBLE_QUOTE + v + DOUBLE_QUOTE
       end
+      k = k.to_s
+      unless for_parameter
+        k = to_s_escaped k
+      end
+      k = DOUBLE_QUOTE + k + DOUBLE_QUOTE
 
       # TODO: throw an error if there is a NULL key
-      "\"#{to_s_escaped(k)}\" => #{v}"
+      [k, v].join ' => '
     end.join(", ")
-    "'#{string}'"
+    if for_parameter
+      SINGLE_QUOTE + string + SINGLE_QUOTE
+    else
+      string
+    end
   end
 
   private
@@ -67,9 +83,8 @@ module PgHstore
     scanner.skip(/,\s*/)
   end
 
-
   def to_s_escaped(str)
-    str.to_s.gsub(/\\(?!")/) {'\\\\'}.gsub(/"/, '\"').gsub(/'/, "''")
+    str.gsub(/\\(?!")/) {'\\\\'}.gsub(DOUBLE_QUOTE, '\"').gsub(SINGLE_QUOTE, "''")
   end
 
 end
