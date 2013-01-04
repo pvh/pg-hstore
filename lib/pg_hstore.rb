@@ -33,16 +33,16 @@ module PgHstore
         # represent nil as NULL without quotes
         v = "NULL"
       else
-        v = v.to_s
+        v = double_quote_escape v
         unless for_parameter
-          v = to_s_escaped v
+          v = single_quote_escape v
         end
         # otherwise, write a double-quoted string with backslash escapes for quotes
         v = DOUBLE_QUOTE + v + DOUBLE_QUOTE
       end
-      k = k.to_s
+      k = double_quote_escape k
       unless for_parameter
-        k = to_s_escaped k
+        k = single_quote_escape k
       end
       k = DOUBLE_QUOTE + k + DOUBLE_QUOTE
 
@@ -83,8 +83,12 @@ module PgHstore
     scanner.skip(/,\s*/)
   end
 
-  def to_s_escaped(str)
-    str.gsub(/\\(?!")/) {'\\\\'}.gsub(DOUBLE_QUOTE, '\"').gsub(SINGLE_QUOTE, "''")
+  def double_quote_escape(str)
+    str.to_s.gsub DOUBLE_QUOTE, '\"'
+  end
+
+  def single_quote_escape(str)
+    str.to_s.gsub(/\\(?!")/) {'\\\\'}.gsub(SINGLE_QUOTE, "''")
   end
 
 end
