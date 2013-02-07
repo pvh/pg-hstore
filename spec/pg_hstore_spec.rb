@@ -6,7 +6,7 @@ describe "hstores from hashes" do
   end
 
   it "should translate into a sequel literal" do
-    @h.should == %{'"a" => "b", "foo" => "bar"'}
+    @h.should == %{'"a"=>"b","foo"=>"bar"'}
   end
 end
 
@@ -22,22 +22,22 @@ describe "creating hstores from strings" do
 
   it "should store an empty string" do
     hstore = PgHstore::dump :nothing => ""
-    hstore.should == %{'"nothing" => ""'}
+    hstore.should == %{'"nothing"=>""'}
   end
 
   it "should support single quotes in strings" do
     hstore = PgHstore::dump :journey => "don't stop believin'"
-    hstore.should == %q{'"journey" => "don''t stop believin''"'}
+    hstore.should == %q{'"journey"=>"don''t stop believin''"'}
   end
 
   it "should support double quotes in strings" do
     hstore = PgHstore::dump :journey => 'He said he was "ready"'
-    hstore.should == %q{'"journey" => "He said he was \"ready\""'}
+    hstore.should == %q{'"journey"=>"He said he was \"ready\""'}
   end
 
   it "should escape \ garbage in strings" do
     hstore = PgHstore::dump :line_noise => %q[perl -p -e 's/\$\{([^}]+)\}/] #'
-    hstore.should == %q['"line_noise" => "perl -p -e ''s/\\\\$\\\\{([^}]+)\\\\}/"']
+    hstore.should == %q['"line_noise"=>"perl -p -e ''s/\\\\$\\\\{([^}]+)\\\\}/"']
   end
 
   it "should parse an empty string" do
@@ -74,7 +74,7 @@ describe "creating hstores from strings" do
 
   # https://github.com/engageis/activerecord-postgres-hstore/issues/78
   it "should pass @teeparham's tests" do
-    PgHstore.dump({"a" => "\"a\""}, true).should == %q("a" => "\"a\"")
+    PgHstore.dump({"a" => "\"a\""}, true).should == %q("a"=>"\"a\"")
   end
 
   it "should be able to parse hstore strings without ''" do

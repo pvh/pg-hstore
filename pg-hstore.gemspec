@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name = 'pg-hstore'
-  s.version = '1.1.4'
+  s.version = '1.1.5'
 
   s.description = "postgresql hstore parser/deparser - provides PgHstore.dump and PgHstore.load (aka parse)"
   s.summary     = ""

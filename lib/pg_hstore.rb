@@ -1,6 +1,8 @@
 module PgHstore
   SINGLE_QUOTE = "'"
   DOUBLE_QUOTE = '"'
+  HASHROCKET = '=>'
+  COMMA = ','
 
   QUOTED_LITERAL = /"[^"\\]*(?:\\.[^"\\]*)*"/
   UNQUOTED_LITERAL = /[^\s=,][^\s=,\\]*(?:\\.[^\s=,\\]*|=[^,>])*/
@@ -37,8 +39,8 @@ module PgHstore
         k = escape_single_quotes k
       end
       k = DOUBLE_QUOTE + k + DOUBLE_QUOTE
-      [k, v].join ' => '
-    end.join(', ')
+      [k, v].join HASHROCKET
+    end.join(COMMA)
     if for_parameter
       memo
     else
