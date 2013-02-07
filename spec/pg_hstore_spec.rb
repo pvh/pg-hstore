@@ -49,10 +49,32 @@ describe "creating hstores from strings" do
   end
 
   it "should be able to parse its own output" do
-    data = { :journey => 'He said he was ready' }
-    hstore = PgHstore::dump data
-    parsed = PgHstore::parse(hstore)
-    parsed.should == data
+    [
+      { :journey => 'He said he was ready' },
+      { :a => '\\' },
+      { :b => '\\\\' },
+      { :b1 => '\\"' },
+      { :b2 => '\\"\\' },
+      { :c => '\\\\\\' },
+      { :d => '\\"\\""\\' },
+      { :d1 => '\"\"\\""\\' },
+      { :e => "\\'\\''\\" },
+      { :e1 => "\\'\\''\"" },
+      { :f => '\\\"\\""\\' },
+      { :g => "\\\'\\''\\" },
+    ].each do |data|
+      original = data
+      3.times do
+        hstore = PgHstore::dump data
+        data = PgHstore::parse(hstore)
+        data.should == original
+      end
+    end
+  end
+
+  # https://github.com/engageis/activerecord-postgres-hstore/issues/78
+  it "should pass @teeparham's tests" do
+    PgHstore.dump({"a" => "\"a\""}, true).should == %q("a" => "\"a\"")
   end
 
   it "should be able to parse hstore strings without ''" do
