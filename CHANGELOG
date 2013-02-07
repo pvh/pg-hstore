@@ -1,0 +1,59 @@
+1.1.6 / 2013-02-06
+
+* Bug fixes
+
+  * Properly handle double-single-quotes via $$ quotes
+
+* Enhancements
+
+  * Test against a real Postgres connection
+
+1.1.5 / 2013-02-06
+
+* Enhancements
+
+  * Get rid of spaces around hashrocket and between pairs
+
+1.1.4 / 2013-02-06
+
+* Bug fixes
+
+  * Properly escape double quotes, unbalanced quotes, etc. - thanks activerecord-postgres-hstore !
+
+* Deprecations
+
+  * Use PgHstore.load instead of PgHstore.parse
+
+* Enhancements
+
+  * PgHstore.parse(hstore, false) turns off symbolizing keys
+  * Add README
+
+1.1.3 / 2013-01-03
+
+* Bug fixes
+
+  * Double quotes should always be escaped, even for bind variables
+
+1.1.2 / 2012-12-06
+
+* Bug fixes
+
+  * Had it backwards when to surround dump with single quotes. 
+
+1.1.1 / 2012-12-06
+
+* Enhancements
+
+  * PgHstore.dump(x, true) if you're going to use the output in a bind variable
+
+1.1.0 / 2012-12-06
+
+* Breaking changes
+
+  * Use `require 'pg_hstore'` instead of `require 'hstore'`
+  * Use PgHstore.{parse|dump} instead of HStore.{parse|dump}
+
+* Enhancements
+
+  * Removed sequel stuff since it's been merged into sequel
