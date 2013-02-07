@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name = 'pg-hstore'
-  s.version = '1.1.5'
+  s.version = '1.1.6'
 
   s.description = "postgresql hstore parser/deparser - provides PgHstore.dump and PgHstore.load (aka parse)"
   s.summary     = ""
@@ -10,7 +10,8 @@ Gem::Specification.new do |s|
 
   s.files = Dir["lib/**/*.rb"]
 
-  s.add_development_dependency 'rspec', '~> 2.5.0'
+  s.add_development_dependency 'rspec'
+  s.add_development_dependency 'pg'
   s.homepage = "https://github.com/seamusabshere/pg-hstore"
   s.require_paths = %w[lib]
 end

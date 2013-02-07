@@ -1,3 +1,13 @@
+1.1.6 / 2013-02-06
+
+* Bug fixes
+
+  * Properly handle double-single-quotes via $$ quotes
+
+* Enhancements
+
+  * Test against a real Postgres connection
+
 1.1.5 / 2013-02-06
 
 * Enhancements
